@@ -13,8 +13,9 @@ class AdminAuthController extends Controller
 
     public function index(Request $request){
 
-        $admin = Auth::guard('admin')->user();
+        $admin = Auth::user();
 
+        return $admin;
         if($admin){
             return response()->json([
                 'message' => 'Admin fetched successfully',

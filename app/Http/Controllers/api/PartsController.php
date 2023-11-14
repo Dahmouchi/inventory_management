@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddPartsRequest;
 use App\Models\Parts;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PartsController extends Controller
 {
@@ -22,9 +23,21 @@ class PartsController extends Controller
      */
     public function store(AddPartsRequest $request)
     {
+        // get auth admin
+        $admin = Auth::user();
+
         $data = $request->validated();
-        $parts = Parts::create($data);
-        return response()->json($parts, 201);
+
+        $part = Parts::create([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'sellPrice' => $data['sellPrice'],
+            'purchasePrice' => $data['purchasePrice'],
+            'quantity' => $data['quantity'],
+            'admin_id' => $admin->id,
+        ]);
+
+        return response()->json($part, 201);
 
     }
 

@@ -27,7 +27,6 @@ class AddPartsRequest extends FormRequest
             'sellPrice' => 'required|numeric',
             'purchasePrice' => 'required|numeric',
             'quantity' => 'required|numeric',
-            'admin_id' => 'required|numeric|exists:admins,id',
         ];
     }
 }

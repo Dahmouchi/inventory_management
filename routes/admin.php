@@ -24,11 +24,14 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+
     Route::get('/', [AdminAuthController::class, "index"]);
+
     Route::prefix('auth')->group(function () {
         Route::delete('logout', [AdminAuthController::class, "logout"]);
     });
     Route::apiResource('parts', PartsController::class);
+    
 });
 
 //Auth Routes
