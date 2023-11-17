@@ -84,4 +84,9 @@ class PartsController extends Controller
     }
 
 
+    public function buy(Request $request){
+        return response()->json(['message' => 'Part not found'], 404);
+    }
+
+
 }

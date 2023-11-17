@@ -30,8 +30,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::prefix('auth')->group(function () {
         Route::delete('logout', [AdminAuthController::class, "logout"]);
     });
+
     Route::apiResource('parts', PartsController::class);
-    
+
 });
 
 //Auth Routes
