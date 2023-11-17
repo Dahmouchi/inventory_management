@@ -61,6 +61,8 @@ class PartsController extends Controller
     public function update(Request $request, string $id)
     {
         $part = Parts::find($id);
+
+
         if ($part) {
             $part->update($request->all());
             return response()->json($part, 200);
@@ -85,7 +87,31 @@ class PartsController extends Controller
 
 
     public function buy(Request $request){
-        return response()->json(['message' => 'Part not found'], 404);
+
+        $parts = $request->parts;
+
+        $request->validate([
+            'parts' => 'required|array',
+            'parts.*.quantity' => 'required|integer|min:1',
+            'parts.*.id' => 'required|integer|exists:parts,id',
+        ]);
+
+        // decrease quantity of parts
+        foreach ($parts as $part) {
+            $partModel = Parts::find($part['id']);
+
+            // check if quantity is enough
+            if ($partModel->quantity < $part['quantity']) {
+                return response()->json(['message' => "Not enough quantity for part: $partModel->name , id : $partModel->id" ], 400);
+            }
+
+            $partModel->update([
+                'quantity' => $partModel->quantity - $part['quantity']
+            ]);
+
+            return response()->json(['message' => "Parts bought successfully"], 200);
+        }
+
     }
 
 
