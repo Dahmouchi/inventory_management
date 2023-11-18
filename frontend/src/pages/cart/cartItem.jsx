@@ -1,8 +1,15 @@
 import React from "react";
 
-export const CartItem = ({ id, quantity, onUpdateQuantity, onRemove }) => {
+export const CartItem = ({
+    id,
+    quantity,
+    name,
+    onUpdateQuantity,
+    onRemove,
+}) => {
     return (
         <div>
+            <p>{name}</p>
             <p>id: {id}</p>
             <p>Quantity: {quantity}</p>
             <button

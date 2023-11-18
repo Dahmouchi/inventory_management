@@ -16,6 +16,9 @@ export const Cart = () => {
                         {cart.map((item) => (
                             <CartItem
                                 key={item.id}
+                                id={item.id}
+                                quantity={item.quantity}
+                                name={item.name}
                                 onRemove={removeFromCart}
                                 onUpdateQuantity={updateQuantity}
                             />
