@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('quantity');
             //foreign key of the admin that add parts to the table
             $table->foreignId('admin_id')->onUpadate("cascade")->onDelete("cascade") ;
-
+            $table->text('image');
             $table->timestamps();
         });
     }

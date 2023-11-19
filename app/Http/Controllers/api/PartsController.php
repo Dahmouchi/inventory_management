@@ -7,6 +7,7 @@ use App\Http\Requests\AddPartsRequest;
 use App\Models\Parts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PartsController extends Controller
 {
@@ -28,6 +29,20 @@ class PartsController extends Controller
 
         $data = $request->validated();
 
+        // upload image
+        $image = $request->file('image');
+        $imageName = $image->getClientOriginalName().'_'. time() . '.' . $image->extension();
+
+        $path = $image->storeAs('public/images', $imageName);
+
+
+        if (!$path) {
+            return response()->json(['message' => 'Error in uploading image'], 500);
+        }
+
+        $data['image'] = Storage::disk("public")->url($path);
+
+
         $part = Parts::create([
             'name' => $data['name'],
             'description' => $data['description'],
@@ -35,6 +50,7 @@ class PartsController extends Controller
             'purchasePrice' => $data['purchasePrice'],
             'quantity' => $data['quantity'],
             'admin_id' => $admin->id,
+            'image' => $data['image'],
         ]);
 
         return response()->json($part, 201);
@@ -62,13 +78,47 @@ class PartsController extends Controller
     {
         $part = Parts::find($id);
 
-
         if ($part) {
-            $part->update($request->all());
-            return response()->json($part, 200);
-        } else {
-            return response()->json(['message' => 'Part not found'], 404);
-        }
+
+            $data = $request->validate([
+                'name' => 'string',
+                'description' => 'string',
+                'sellPrice' => 'numeric|min:0',
+                'purchasePrice' => 'numeric|min:0',
+                'quantity' => 'integer|min:0',
+                'image' => 'image|mimes:jpeg,png,jpg,gif,svg',
+
+            ]);
+
+            if($request->hasFile('image')){
+                // upload image
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName().'_'. time() . '.' . $image->extension();
+
+            $path = $image->storeAs('public/images', $imageName);
+
+
+
+            if (!$path) {
+                return response()->json(['message' => 'Error in uploading image'], 500);
+            }
+
+            if($path && $part->image){
+
+                $imagePath = "images/".explode('/', $part->image)[6];
+    
+                Storage::disk('public')->delete($imagePath);
+            }
+
+            $data['image'] = Storage::disk("public")->url($path);
+            }
+
+
+            $part->update($data);
+                return response()->json($part, 200);
+            } else {
+                return response()->json(['message' => 'Part not found'], 404);
+            }
     }
 
     /**
@@ -77,8 +127,19 @@ class PartsController extends Controller
     public function destroy(string $id)
     {
         $part = Parts::find($id);
+
+
+
         if ($part) {
             $part->delete();
+
+            // Get image name
+            $imagePath = "images/".explode('/', $part->image)[6];
+
+            // Delete the image
+            Storage::disk('public')->delete($imagePath);
+
+
             return response()->json(['message' => 'Part deleted'], 200);
         } else {
             return response()->json(['message' => 'Part not found'], 404);

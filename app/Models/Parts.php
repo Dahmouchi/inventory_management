@@ -17,6 +17,7 @@ class Parts extends Model
         'purchasePrice',
         'admin_id',
         'quantity',
+        'image',
     ];
 
 

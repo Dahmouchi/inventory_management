@@ -27,6 +27,7 @@ class AddPartsRequest extends FormRequest
             'sellPrice' => 'required|numeric',
             'purchasePrice' => 'required|numeric',
             'quantity' => 'required|numeric',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ];
     }
 }
