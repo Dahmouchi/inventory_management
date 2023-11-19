@@ -51,6 +51,7 @@ export const Cart = () => {
                             quantity={item.quantity}
                             name={item.name}
                             price={item.sellPrice}
+                            pic={item.image}
                             onRemove={removeFromCart}
                             onUpdateQuantity={updateQuantity}
                         />

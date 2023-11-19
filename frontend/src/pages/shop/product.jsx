@@ -1,16 +1,13 @@
 import React, { useContext } from "react";
 import { CartContext } from "../context/cartContext";
 
-export const Product = ({ id, name, price, onAddToCart }) => {
+export const Product = ({ id, name, price, onAddToCart, pic }) => {
     const { cart } = useContext(CartContext);
     const existingProduct = cart.find((item) => item.id === id);
     const productCount = existingProduct ? existingProduct.quantity : 0;
     return (
         <div key={id} className="product">
-            <img
-                src="https://usedautopartsdenver.co/userfiles/2403/images/engines_LUH_1_lg.jpg"
-                alt="product"
-            />
+            <img src={pic} alt="product" />
             <div className="description">
                 <p> {name}</p>
                 <p> $ {price}</p>

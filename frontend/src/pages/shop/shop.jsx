@@ -32,6 +32,7 @@ export const Shop = () => {
                         id={product.id}
                         name={product.name}
                         price={product.sellPrice}
+                        pic={product.image}
                         onAddToCart={() => addToCart(product)}
                     />
                 ))}

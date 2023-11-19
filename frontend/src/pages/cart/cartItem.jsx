@@ -7,13 +7,11 @@ export const CartItem = ({
     onUpdateQuantity,
     onRemove,
     price,
+    pic,
 }) => {
     return (
         <div>
-            <img
-                src="https://usedautopartsdenver.co/userfiles/2403/images/engines_LUH_1_lg.jpg"
-                alt="product"
-            />
+            <img src={pic} alt="product" />
             <p>
                 {name} &nbsp;&nbsp;&nbsp;&nbsp; price:{price}$ ({quantity})
             </p>
