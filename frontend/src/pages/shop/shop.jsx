@@ -23,20 +23,18 @@ export const Shop = () => {
         <div className="Shop">
             <div className="shopTitle">
                 <h1>Wa Hassan Shop</h1>
+                <h2>Products</h2>
             </div>
             <div className="products">
-                <h2>Products</h2>
-                <div>
-                    {products.map((product) => (
-                        <Product
-                            key={product.id}
-                            id={product.id}
-                            name={product.name}
-                            price={product.price}
-                            onAddToCart={() => addToCart(product)}
-                        />
-                    ))}
-                </div>
+                {products.map((product) => (
+                    <Product
+                        key={product.id}
+                        id={product.id}
+                        name={product.name}
+                        price={product.price}
+                        onAddToCart={() => addToCart(product)}
+                    />
+                ))}
             </div>
         </div>
     );
