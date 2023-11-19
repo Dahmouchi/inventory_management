@@ -3,6 +3,8 @@ import { CartItem } from "./cartItem";
 import { CartContext } from "../context/cartContext";
 import axios from "axios";
 
+import "./cart.css"
+
 export const Cart = () => {
     const { updateQuantity, removeFromCart, cart, setCart } =
         useContext(CartContext);
@@ -27,6 +29,11 @@ export const Cart = () => {
                 setPurchaseMessage(err.response.data.message);
             });
     };
+    const totalPrice = cart.reduce(
+        (accumulator, currentItem) =>
+            accumulator + currentItem.sellPrice * currentItem.quantity,
+        0
+    );
     return (
         <div className="Cart">
             <h1>Shopping Cart</h1>
@@ -36,20 +43,24 @@ export const Cart = () => {
                     {purchaseMessage && <p> {purchaseMessage} </p>}
                 </div>
             ) : (
-                <div>
-                    <ul>
-                        {cart.map((item) => (
-                            <CartItem
-                                key={item.id}
-                                id={item.id}
-                                quantity={item.quantity}
-                                name={item.name}
-                                onRemove={removeFromCart}
-                                onUpdateQuantity={updateQuantity}
-                            />
-                        ))}
-                    </ul>
-                    <button onClick={ConfirmPurchase}>Confirm Purchase</button>
+                <div className="cart">
+                    {cart.map((item) => (
+                        <CartItem
+                            key={item.id}
+                            id={item.id}
+                            quantity={item.quantity}
+                            name={item.name}
+                            price={item.sellPrice}
+                            onRemove={removeFromCart}
+                            onUpdateQuantity={updateQuantity}
+                        />
+                    ))}
+                    <div className="total-price">
+                        <p>Total Price: ${totalPrice.toFixed(2)}</p>
+                    </div>
+                    <button className="cartbtn" onClick={ConfirmPurchase}>
+                        Confirm Purchase
+                    </button>
                     {purchaseMessage && <p> {purchaseMessage} </p>}
                 </div>
             )}

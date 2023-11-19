@@ -28,9 +28,9 @@
     width: 100%;
     max-width: 100%;
     height: auto;
-    border: 4px solid rgb(19, 19, 19);
+    border: 1px solid rgb(19, 19, 19);
             /* Adding a border around the image */
-    border-radius: 8px;
+    border-radius: 12px;
         /* Optional: Adding border-radius for rounded corners */
     padding: 5px;
         /* Optional: Padding around the image */

@@ -6,22 +6,33 @@ export const CartItem = ({
     name,
     onUpdateQuantity,
     onRemove,
+    price,
 }) => {
     return (
         <div>
-            <p>{name}</p>
-            <p>id: {id}</p>
-            <p>Quantity: {quantity}</p>
+            <img
+                src="https://usedautopartsdenver.co/userfiles/2403/images/engines_LUH_1_lg.jpg"
+                alt="product"
+            />
+            <p>
+                {name} &nbsp;&nbsp;&nbsp;&nbsp; price:{price}$ ({quantity})
+            </p>
             <button
+                className="cartbtn"
                 onClick={() => onUpdateQuantity(id, quantity - 1)}
                 disabled={quantity === 1}
             >
                 Decrease Quantity
             </button>
-            <button onClick={() => onUpdateQuantity(id, quantity + 1)}>
+            <button
+                className="cartbtn"
+                onClick={() => onUpdateQuantity(id, quantity + 1)}
+            >
                 Increase Quantity
             </button>
-            <button onClick={() => onRemove(id)}>Remove Item</button>
+            <button className="cartbtn" onClick={() => onRemove(id)}>
+                Remove Item
+            </button>
         </div>
     );
 };
