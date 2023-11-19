@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { Product } from "./product";
 import { CartContext } from "../context/cartContext";
+import "./shop.css";
 export const Shop = () => {
     const [products, setProducts] = useState([]);
     const { addToCart } = useContext(CartContext);
@@ -25,7 +26,7 @@ export const Shop = () => {
             </div>
             <div className="products">
                 <h2>Products</h2>
-                <ul>
+                <div>
                     {products.map((product) => (
                         <Product
                             key={product.id}
@@ -35,7 +36,7 @@ export const Shop = () => {
                             onAddToCart={() => addToCart(product)}
                         />
                     ))}
-                </ul>
+                </div>
             </div>
         </div>
     );
