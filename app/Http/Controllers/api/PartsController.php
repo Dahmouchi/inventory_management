@@ -31,7 +31,7 @@ class PartsController extends Controller
 
         // upload image
         $image = $request->file('image');
-        $imageName = $image->getClientOriginalName().'_'. time() . '.' . $image->extension();
+        $imageName =  $image->getClientOriginalName().'_'. time() . '.' . $image->extension();
 
         $path = $image->storeAs('public/images', $imageName);
 
@@ -40,7 +40,8 @@ class PartsController extends Controller
             return response()->json(['message' => 'Error in uploading image'], 500);
         }
 
-        $data['image'] = Storage::disk("public")->url($path);
+        $data['image'] = Storage::disk("public")->url("/images/{$imageName}");
+
 
 
         $part = Parts::create([
@@ -106,11 +107,11 @@ class PartsController extends Controller
             if($path && $part->image){
 
                 $imagePath = "images/".explode('/', $part->image)[6];
-    
+
                 Storage::disk('public')->delete($imagePath);
             }
 
-            $data['image'] = Storage::disk("public")->url($path);
+            $data['image'] = Storage::disk("public")->url("/images/{$imageName}");
             }
 
 
