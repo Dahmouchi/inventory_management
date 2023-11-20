@@ -135,7 +135,7 @@ class PartsController extends Controller
             $part->delete();
 
             // Get image name
-            $imagePath = "images/".explode('/', $part->image)[6];
+            $imagePath = "images/".explode('/', $part->image)[5];
 
             // Delete the image
             Storage::disk('public')->delete($imagePath);
