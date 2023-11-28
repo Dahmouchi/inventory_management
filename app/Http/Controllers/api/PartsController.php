@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\SendPartsStockNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddPartsRequest;
 use App\Models\Parts;
@@ -106,7 +107,7 @@ class PartsController extends Controller
 
             if($path && $part->image){
 
-                $imagePath = "images/".explode('/', $part->image)[6];
+                $imagePath = "images/".explode('/', $part->image)[5];
 
                 Storage::disk('public')->delete($imagePath);
             }
@@ -152,6 +153,8 @@ class PartsController extends Controller
 
         $parts = $request->parts;
 
+
+
         $request->validate([
             'parts' => 'required|array',
             'parts.*.quantity' => 'required|integer|min:1',
@@ -162,14 +165,33 @@ class PartsController extends Controller
         foreach ($parts as $part) {
             $partModel = Parts::find($part['id']);
 
+
             // check if quantity is enough
             if ($partModel->quantity < $part['quantity']) {
                 return response()->json(['message' => "Not enough quantity for part: $partModel->name , id : $partModel->id" ], 400);
             }
 
+
             $partModel->update([
                 'quantity' => $partModel->quantity - $part['quantity']
             ]);
+
+
+            // send notification
+            if ($partModel->quantity <= 10) {
+                event(
+                    new SendPartsStockNotification($partModel,
+                    "part: $partModel->name , id : $partModel->id is running out of stock"
+            ));
+            }else if($partModel->quantity == 0){
+                event(
+                    new SendPartsStockNotification($partModel,
+                    "part: $partModel->name , id : $partModel->id is out of stock"
+            ));
+            }
+
+
+
 
             return response()->json(['message' => "Parts bought successfully"], 200);
         }
