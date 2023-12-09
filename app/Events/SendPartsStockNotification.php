@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Http\Resources\PartsResourserc;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -53,7 +54,7 @@ class SendPartsStockNotification  implements ShouldBroadcast
     {
         return [
             'message' => $this->message,
-            'part' => $this->part,
+            'part' => new PartsResourserc($this->part),
         ];
     }
 

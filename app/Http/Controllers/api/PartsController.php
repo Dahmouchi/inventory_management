@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Events\SendPartsStockNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddPartsRequest;
+use App\Http\Resources\PartsResourserc;
 use App\Models\Parts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class PartsController extends Controller
      */
     public function index()
     {
-        return Parts::all();
+        return PartsResourserc::collection(Parts::all());
     }
 
     /**
@@ -41,7 +42,7 @@ class PartsController extends Controller
             return response()->json(['message' => 'Error in uploading image'], 500);
         }
 
-        $data['image'] = Storage::disk("public")->url("/images/{$imageName}");
+        $data['image'] = $imageName ;
 
 
 
@@ -55,7 +56,7 @@ class PartsController extends Controller
             'image' => $data['image'],
         ]);
 
-        return response()->json($part, 201);
+        return response()->json(new PartsResourserc($part), 201);
 
     }
 
@@ -66,7 +67,7 @@ class PartsController extends Controller
     {
         $part = Parts::find($id);
         if ($part) {
-            return response()->json($part, 200);
+            return response()->json(new PartsResourserc($part), 200);
         } else {
             return response()->json(['message' => 'Part not found'], 404);
         }
@@ -100,24 +101,22 @@ class PartsController extends Controller
             $path = $image->storeAs('public/images', $imageName);
 
 
-
             if (!$path) {
                 return response()->json(['message' => 'Error in uploading image'], 500);
             }
 
             if($path && $part->image){
 
-                $imagePath = "images/".explode('/', $part->image)[5];
 
-                Storage::disk('public')->delete($imagePath);
+                Storage::disk('public')->delete("images/".$part->image);
             }
 
-            $data['image'] = Storage::disk("public")->url("/images/{$imageName}");
+            $data['image'] = $imageName;
             }
 
 
             $part->update($data);
-                return response()->json($part, 200);
+                return response()->json(new PartsResourserc($part), 200);
             } else {
                 return response()->json(['message' => 'Part not found'], 404);
             }
@@ -135,11 +134,9 @@ class PartsController extends Controller
         if ($part) {
             $part->delete();
 
-            // Get image name
-            $imagePath = "images/".explode('/', $part->image)[5];
 
             // Delete the image
-            Storage::disk('public')->delete($imagePath);
+            Storage::disk('public')->delete("images/".$part->image);
 
 
             return response()->json(['message' => 'Part deleted'], 200);
